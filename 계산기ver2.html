@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1"> 
+        <title>계산기</title>
+        <script>
+            var tcal=[];
+            var a=[];
+            var num=[];
+            var cal=[];
+            var cnum=0;
+            var crst=0;
+            var checkc=0;
+            function cwrite(){
+                var stg=tcal[0];
+                for(var i=1; i<tcal.length;i++){
+                    stg+=String(tcal[i]);
+                }
+                document.getElementById("tcalcu").innerHTML=stg;
+            }
+
+            function put(i){
+                if(crst==1){
+                    clean();
+                }
+                tcal.push(i);
+                a.push(i);
+                var str=0;
+                var count=a.length-1;
+                var temp=1;
+                for(var j=0;j<=count;j++){
+                    if(a[count-j]=='.'){
+                        var k=Math.pow(10,j);
+                        str=str/k;
+                        temp=1;
+                    }
+                    else{
+                        str+=a[count-j]*temp;
+                        temp=temp*10;
+                    }
+                }
+                num[cnum]=str;
+                document.getElementById("calcu").innerHTML=str;
+                cwrite();
+                checkc=0;
+            }
+            function putc(i){
+                if(checkc==0){
+                    checkc=1;
+                    tcal.push(i);
+                    cal.push(i);
+                    a=[];
+                    cnum++;
+                    crst=0;
+                    cwrite();
+                    if(cal.length==1){
+                        return;
+                    }
+                    else{
+                        var b=result();
+                        document.getElementById("calcu").innerHTML=b;
+                    }
+                }
+                else{
+                    tcal.pop();
+                    tcal.push(i);
+                    cal.pop();
+                    cal.push(i);
+                    cwrite();
+                }
+            }
+            
+            
+            function clean(){
+                tcal=[];
+                a=[];
+                cal=[];
+                num=[];
+                cnum=0;
+                document.getElementById("calcu").innerHTML=0;
+                crst=0;
+                document.getElementById("tcalcu").innerHTML="&nbsp;";
+            }
+            function result(){
+                var calculate=0;
+                var num1=0;
+                var acount=cal.length;
+                var i=0;
+                calculate=num[0];
+                for(i=0;i<acount-1;i++){
+                    switch(cal[i]){
+                        case "+" : 
+                            calculate=calculate+num[i+1];
+                            break;
+                        case "-" : 
+                            calculate=calculate-num[i+1];
+                            break;
+                        case "*" : 
+                            calculate=calculate*num[i+1];
+                            break;
+                        case "/" : 
+                            calculate=calculate/num[i+1];
+                            break;
+                        case "^" :
+                            calculate=Math.pow(calculate,num[i+1]);
+                            break;
+                        case "sqrt" :
+                            calculate=Math.sqrt(calculate);
+                            break;
+                    }
+                }
+                return calculate;
+                /*
+                a=[];
+                crst=1;
+                document.getElementById("calcu").innerHTML=calculate;
+                tcal.push("=");
+                cwrite();
+                tcal=[calculate];
+                */
+            }
+            
+            function resultT(){
+                if(checkc==1){
+                    num[cnum]=result();
+                    tcal.push(num[cnum]);
+                    document.getElementById("calcu").innerHTML=num[cnum];
+                    cwrite();
+                    checkc=0;
+                }
+                var calculate=0;
+                var num1=0;
+                var acount=cal.length;
+                var i=0;
+                calculate=num[0];
+                for(i=0;i<acount;i++){
+                    switch(cal[i]){
+                        case "+" : 
+                            calculate=calculate+num[i+1];
+                            break;
+                        case "-" : 
+                            calculate=calculate-num[i+1];
+                            break;
+                        case "*" : 
+                            calculate=calculate*num[i+1];
+                            break;
+                        case "/" : 
+                            calculate=calculate/num[i+1];
+                            break;
+                        case "^" :
+                            calculate=Math.pow(calculate,num[i+1]);
+                            break;
+                        case "sqrt" :
+                            calculate=Math.sqrt(calculate);
+                            break;
+                    }
+                }
+                a=[];
+                crst=1;
+                document.getElementById("calcu").innerHTML=calculate;
+                if(checkc==0){
+                    tcal.push("=");
+                }
+                cwrite();
+                tcal=[calculate];
+                
+            }
+            
+        </script>
+        <style>
+            #cal{border: 1px solid black; width: 300px; height: 500px; text-align: center;}
+            button{width: 60px; height: 35px;margin-top: 5px;}
+            div button:last-child{width: 125px;}
+            #calcu{font-size: 30px; text-align: right; padding-right: 30px;}
+        </style>
+    </head>
+    <body>
+        <div id="cal">
+            <p id="tcalcu">&nbsp;</p>
+            <p id="calcu">0</p>
+            <button onclick="put(1);">1</button>
+            <button onclick="put(2);">2</button>
+            <button onclick="put(3);">3</button>
+            <button onclick="putc('+');">+</button>
+            <button onclick="put(4);">4</button>
+            <button onclick="put(5);">5</button>
+            <button onclick="put(6);">6</button>
+            <button onclick="putc('-');">-</button>
+            <button onclick="put(7);">7</button>
+            <button onclick="put(8);">8</button>
+            <button onclick="put(9);">9</button>
+            <button onclick="putc('*');">*</button>
+            <button onclick="clean();">c</button>
+            <button onclick="put(0);">0</button>
+            <button onclick="put('.');">.</button>
+            <button onclick="putc('/');">/</button>
+            <button onclick="putc('^')";>^</button>
+            <button onclick="putc('sqrt'); resultT();">sqrt</button>
+            <button onclick="resultT();">=</button>
+        </div>
+    </body>
+
+</html>
